@@ -19,6 +19,7 @@
 
     data() {
       return {
+        errors: {},
         disableSubmit: false,
       };
     },
@@ -30,16 +31,21 @@
           event.preventDefault();
         }
       },
+
+      clearErrors() {
+        this.errors = {};
+      },
     }
   }
 </script>
 
 <template>
-  <vue-form :input-event="true">
+  <vue-form :input-event="true" :errors="errors">
     <vue-input name="user_name" />
 
     <vue-input name="password" />
 
     <button type="submit" @click='submitForm'>Submit</button>
+    <button @click.prevent="clearErrors">Cancel</button>
   </vue-form>
 </template>

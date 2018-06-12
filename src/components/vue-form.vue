@@ -25,6 +25,14 @@
       };
     },
 
+    watch: {
+      errors() {
+        for (var field in this.formErrors) {
+          this.$set(this.formErrors, field, this.errors[field] || null);
+        }
+      },
+    },
+
     provide() {
       return {
         formErrors: this.formErrors,
@@ -42,7 +50,7 @@
         this.$set(this.formErrors, fieldName, fieldError);
       },
 
-      submitForm() {
+      submitForm(event) {
         Object.assign(this.formErrors, {
           user_name: 'Test',
         });
@@ -64,7 +72,5 @@
 <template>
   <form class="vue-form" @submit.prevent="submitForm">
     <slot />
-
-    <button @click.prevent="clearErrors">Cancel</button>
   </form>
 </template>
