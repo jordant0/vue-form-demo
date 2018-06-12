@@ -46,6 +46,15 @@
       }
     },
 
+    watch: {
+      formErrors: {
+        handler() {
+          console.log('Watch event trigger');
+        },
+        deep: true,
+      },
+    },
+
     created() {
       this.registerField(this.name, this.error);
     },
@@ -76,10 +85,10 @@
     methods: {
       handleInput(event) {
         if(this.emitEvent) {
-          this.$emit('vue-input-update', event, this.name);
+          this.$emit('input', event.target.value);
 
           if(this.$parent && this.$parent.$options.name === 'VueForm') {
-            this.$parent.$emit('vue-form:input-update', event, this.name);
+            this.$parent.$emit('vue-form:input', event, this.name);
           }
         }
       },

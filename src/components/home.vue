@@ -21,6 +21,8 @@
       return {
         errors: {},
         disableSubmit: false,
+        name: '',
+        password: '',
       };
     },
 
@@ -34,6 +36,7 @@
 
       clearErrors() {
         this.errors = {};
+        this.name = '';
       },
     }
   }
@@ -41,9 +44,9 @@
 
 <template>
   <vue-form :input-event="true" :errors="errors">
-    <vue-input name="user_name" />
+    <vue-input name="user_name" v-model="name" />
 
-    <vue-input name="password" />
+    <vue-input name="password"  v-model="password" />
 
     <button type="submit" @click='submitForm'>Submit</button>
     <button @click.prevent="clearErrors">Cancel</button>

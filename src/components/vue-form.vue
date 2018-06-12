@@ -27,9 +27,7 @@
 
     watch: {
       errors() {
-        for (var field in this.formErrors) {
-          this.$set(this.formErrors, field, this.errors[field] || null);
-        }
+        this.setErrors(this.errors);
       },
     },
 
@@ -42,7 +40,7 @@
     },
 
     mounted() {
-      this.$on('vue-form:input-update', this.handleInput);
+      this.$on('vue-form:input', this.handleInput);
     },
 
     methods: {
@@ -50,16 +48,40 @@
         this.$set(this.formErrors, fieldName, fieldError);
       },
 
-      submitForm(event) {
-        Object.assign(this.formErrors, {
-          user_name: 'Test',
-        });
+      setErrors(newErrors) {
+        for(var field in this.formErrors) {
+          var value = null;
+          if(newErrors[field]) {
+            if(typeof newErrors[field] === 'object') {
+              value = newErrors[field].join(' ');
+            }
+            else {
+              value = newErrors[field];
+            }
+          }
+          this.$set(this.formErrors, field, value || null);
+        }
       },
 
       clearErrors() {
-        for (var field in this.formErrors) {
-          this.formErrors[field] = null;
-        }
+        this.setErrors({});
+      },
+
+      submitForm(event) {
+        Api.postRequest(new FormData(this.$el))
+        .then(
+          this.submitSuccess,
+          this.submitFailure,
+        );
+      },
+
+      submitSuccess(data) {
+        console.log('Submit success');
+        this.clearErrors;
+      },
+
+      submitFailure(data) {
+        this.setErrors(data.errors);
       },
 
       handleInput(event, fieldName) {
