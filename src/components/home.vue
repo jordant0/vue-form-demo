@@ -16,11 +16,30 @@
       VueForm,
       VueInput,
     },
+
+    data() {
+      return {
+        disableSubmit: false,
+      };
+    },
+
+    methods: {
+      submitForm(event) {
+        if(this.disableSubmit) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+      },
+    }
   }
 </script>
 
 <template>
   <vue-form>
-    <vue-input name="userName" />
+    <vue-input name="user_name" />
+
+    <vue-input name="password" />
+
+    <button type="submit" @click='submitForm'>Submit</button>
   </vue-form>
 </template>

@@ -13,31 +13,31 @@
 
     data() {
       return {
-        errorMsg: this.errors,
+        formErrors: this.errors,
       };
     },
 
     provide() {
       return {
-        errorMsg: this.errorMsg,
+        formErrors: this.formErrors,
         registerField: this.registerField,
       };
     },
 
     methods: {
-      registerField(fieldName) {
-        this.$set(this.errorMsg, fieldName, null);
+      registerField(fieldName, fieldError) {
+        this.$set(this.formErrors, fieldName, fieldError);
       },
 
-      handleSubmit() {
-        Object.assign(this.errorMsg, {
-          userName: 'Test',
+      submitForm() {
+        Object.assign(this.formErrors, {
+          user_name: 'Test',
         });
       },
 
-      handleCancel() {
-        for (var field in this.errorMsg) {
-          this.errorMsg[field] = null;
+      clearErrors() {
+        for (var field in this.formErrors) {
+          this.formErrors[field] = null;
         }
       },
     },
@@ -45,10 +45,9 @@
 </script>
 
 <template>
-  <form class='vue-form'>
+  <form class='vue-form' @submit.prevent='submitForm'>
     <slot />
 
-    <button @click.prevent='handleSubmit'>Submit</button>
-    <button @click.prevent='handleCancel'>Cancel</button>
+    <button @click.prevent='clearErrors'>Cancel</button>
   </form>
 </template>
