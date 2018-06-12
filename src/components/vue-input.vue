@@ -10,7 +10,8 @@
 
     inject: [
       'formErrors',
-      'registerField'
+      'formOptions',
+      'registerField',
     ],
 
     props: {
@@ -18,22 +19,35 @@
         type: String,
         required: true,
       },
+
       type: {
         type: String,
         default: 'text',
       },
+
       value: {
         type: [ String, Number ],
         default: null,
       },
+
       label: {
         type: String,
         default: null,
       },
+
       error: {
         type: [ String, Boolean ],
         default: null,
       },
+
+      emitOnInput: {
+        type: Boolean,
+        default: undefined,
+      }
+    },
+
+    created() {
+      this.registerField(this.name, this.error);
     },
 
     computed: {
@@ -48,17 +62,34 @@
       displayErrorMsg() {
         return typeof this.fieldError === 'string' && this.fieldError.length;
       },
+
+      emitEvent() {
+        if(typeof this.emitOnInput === 'undefined') {
+          return this.formOptions.inputEvent;
+        }
+        else {
+          return this.emitOnInput;
+        }
+      },
     },
 
-    created() {
-      this.registerField(this.name, this.error);
-    },
+    methods: {
+      handleInput(event) {
+        if(this.emitEvent) {
+          this.$emit('vue-input-update', event, this.name);
+
+          if(this.$parent && this.$parent.$options.name === 'VueForm') {
+            this.$parent.$emit('vue-form:input-update', event, this.name);
+          }
+        }
+      },
+    }
   }
 </script>
 
 <template>
-  <div :class='["form-control", fieldError ? "form-control--error" : ""]'>
-    <label :for='name' class='form-control_label'>
+  <div :class="['form-control', fieldError ? 'form-control--error' : '']">
+    <label :for="name" class="form-control_label">
       {{ displayLabel }}
     </label>
 
@@ -67,10 +98,10 @@
       :type="type"
       :value="value"
       class='form-control_input'
-      @input="$emit('input-value', $event.target.value)"
+      @input="handleInput"
     >
 
-    <div v-if='displayErrorMsg'>
+    <div v-if="displayErrorMsg">
       {{ fieldError }}
     </div>
   </div>

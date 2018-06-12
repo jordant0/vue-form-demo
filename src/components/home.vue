@@ -35,7 +35,7 @@
 </script>
 
 <template>
-  <vue-form>
+  <vue-form :input-event="true">
     <vue-input name="user_name" />
 
     <vue-input name="password" />
