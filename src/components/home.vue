@@ -48,7 +48,9 @@
 
     <vue-input name="password"  v-model="password" />
 
-    <button type="submit" @click='submitForm'>Submit</button>
-    <button @click.prevent="clearErrors">Cancel</button>
+    <template slot="form-actions">
+      <button type="submit" @click='submitForm'>Submit</button>
+      <button @click.prevent="clearErrors">Cancel</button>
+    </template>
   </vue-form>
 </template>

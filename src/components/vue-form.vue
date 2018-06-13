@@ -22,6 +22,10 @@
         formOptions: {
           inputEvent: this.inputEvent,
         },
+        message: {
+          type: 'info',
+          text: '',
+        },
       };
     },
 
@@ -67,7 +71,23 @@
         this.setErrors({});
       },
 
+      showMessage(message, type, delay) {
+        this.message.text = message;
+        if(type) {
+          this.message.type = type;
+        }
+        if(delay) {
+          setTimeout(this.clearMessage, delay);
+        }
+      },
+
+      clearMessage() {
+        this.message.text = '';
+      },
+
       submitForm(event) {
+        this.clearErrors();
+        this.clearMessage();
         Api.postRequest(new FormData(this.$el))
         .then(
           this.submitSuccess,
@@ -76,12 +96,14 @@
       },
 
       submitSuccess(data) {
-        console.log('Submit success');
-        this.clearErrors;
+        this.showMessage('Form submit succeeded.', 'success', 3000);
+        this.$emit('vue-form-success');
       },
 
       submitFailure(data) {
+        this.showMessage('Form submit failed. Please check fields for errors.', 'error');
         this.setErrors(data.errors);
+        this.$emit('vue-form-failure');
       },
 
       handleInput(event, fieldName) {
@@ -93,6 +115,19 @@
 
 <template>
   <form class="vue-form" @submit.prevent="submitForm">
+    <div
+      v-if="message.text && message.text.length"
+      :class="['vue-form_message', `vue-form_messsage--${message.type}`]"
+    >
+      {{ message.text }}
+    </div>
+
     <slot />
+
+    <div class="vue-form_actions">
+      <slot name="form-actions">
+        <button type="submit">Submit</button>
+      </slot>
+    </div>
   </form>
 </template>
