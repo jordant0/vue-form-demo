@@ -23,6 +23,7 @@
         disableSubmit: false,
         name: '',
         password: '',
+        submitting: false,
       };
     },
 
@@ -34,23 +35,39 @@
         }
       },
 
-      clearErrors() {
+      clearForm() {
         this.errors = {};
         this.name = '';
+        this.password = '';
       },
     }
   }
 </script>
 
 <template>
-  <vue-form :input-event="true" :errors="errors">
+  <vue-form
+    :input-event="true"
+    :errors="errors"
+    @vue-form-submit="submitting = true"
+    @vue-form-success="clearForm"
+    @vue-form-done="submitting = false"
+  >
     <vue-input name="user_name" v-model="name" />
 
     <vue-input name="password"  v-model="password" />
 
     <template slot="form-actions">
-      <button type="submit" @click='submitForm'>Submit</button>
-      <button @click.prevent="clearErrors">Cancel</button>
+      <button type="submit" @click='submitForm' :disabled='submitting'>
+        {{ submitting ? 'Submitting...' : 'Submit' }}
+      </button>
+      <button @click.prevent="clearForm">Cancel</button>
     </template>
   </vue-form>
 </template>
+
+<style>
+  button {
+    padding: 4px 8px;
+    margin: 0 4px;
+  }
+</style>

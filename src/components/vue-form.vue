@@ -86,12 +86,16 @@
       },
 
       submitForm(event) {
+        this.$emit('vue-form-submit');
         this.clearErrors();
         this.clearMessage();
         Api.postRequest(new FormData(this.$el))
         .then(
           this.submitSuccess,
           this.submitFailure,
+        )
+        .finally(
+          this.submitDone,
         );
       },
 
@@ -104,6 +108,10 @@
         this.showMessage('Form submit failed. Please check fields for errors.', 'error');
         this.setErrors(data.errors);
         this.$emit('vue-form-failure');
+      },
+
+      submitDone() {
+        this.$emit('vue-form-done');
       },
 
       handleInput(event, fieldName) {
@@ -155,5 +163,9 @@
   .vue-form_message--error {
     border-color: #965454;
     background-color: #fbeded;
+  }
+
+  .vue-form_actions {
+    margin-top: 10px;
   }
 </style>
