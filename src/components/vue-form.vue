@@ -117,12 +117,14 @@
   <form class="vue-form" @submit.prevent="submitForm">
     <div
       v-if="message.text && message.text.length"
-      :class="['vue-form_message', `vue-form_messsage--${message.type}`]"
+      :class="['vue-form_message', `vue-form_message--${message.type}`]"
     >
       {{ message.text }}
     </div>
 
-    <slot />
+    <div class='vue-form_content'>
+      <slot />
+    </div>
 
     <div class="vue-form_actions">
       <slot name="form-actions">
@@ -131,3 +133,27 @@
     </div>
   </form>
 </template>
+
+<style scoped>
+  .vue-form {
+    width: 400px;
+    margin: auto;
+  }
+
+  .vue-form_message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #547b96;
+    background-color: #e7f6fb;
+  }
+
+  .vue-form_message--success {
+    border-color: #376739;
+    background-color: #e7ffee;
+  }
+
+  .vue-form_message--error {
+    border-color: #965454;
+    background-color: #fbeded;
+  }
+</style>

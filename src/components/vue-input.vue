@@ -98,20 +98,62 @@
 
 <template>
   <div :class="['form-control', fieldError ? 'form-control--error' : '']">
-    <label :for="name" class="form-control_label">
-      {{ displayLabel }}
-    </label>
+    <div class="form-control_input-wrapper">
+      <label :for="name" class="form-control_label">
+        {{ displayLabel }}
+      </label>
 
-    <input
-      :name="name"
-      :type="type"
-      :value="value"
-      class='form-control_input'
-      @input="handleInput"
-    >
+      <input
+        :name="name"
+        :type="type"
+        :value="value"
+        class='form-control_input'
+        @input="handleInput"
+      >
+    </div>
 
-    <div v-if="displayErrorMsg">
+    <div v-if="displayErrorMsg" class="form-control_error">
       {{ fieldError }}
     </div>
   </div>
 </template>
+
+<style scoped>
+  .form-control {
+    padding: 12px 0;
+    position: relative;
+  }
+
+  .form-control_input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-bottom: 30px; */
+  }
+
+  .form-control_label {
+    font-weight: 600;
+  }
+
+  .form-control_input {
+    width: 200px;
+    padding: 4px 8px;
+    border: 1px solid lightgray;
+  }
+
+  .form-control_error {
+    /* position: absolute;
+    bottom: 12px;
+    right: 0; */
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  .form-control--error {
+    color: darkred;
+  }
+
+  .form-control--error .form-control_input {
+    border-color: darkred;
+  }
+</style>
